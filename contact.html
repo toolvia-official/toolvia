@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="تواصل مع فريق Toolvia وأرسل اقتراحاتك وملاحظاتك.">
+
+    <meta name="robots" content="index, follow">
+
+    <title>تواصل معنا | Toolvia</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .contact-form {
+            display: grid !important;
+            gap: 12px !important;
+            width: 100%;
+        }
+
+        .contact-form label {
+            display: block;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 8px;
+        }
+
+        .contact-form input:not([type="checkbox"]),
+        .contact-form textarea {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text);
+            font: inherit;
+        }
+
+        .contact-form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .contact-form .send-btn {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            width: 100% !important;
+            min-height: 52px;
+            margin-top: 15px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 13px;
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            color: #ffffff !important;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+        }
+
+        .contact-form .send-btn:disabled {
+            opacity: .65 !important;
+            cursor: wait;
+        }
+
+        .contact-message {
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .contact-message:empty {
+            display: none;
+        }
+
+        .contact-message.success {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .contact-message.error {
+            color: #b91c1c;
+            background: #fee2e2;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div class="nav container">
+
+            <a class="logo" href="index.html">
+                Tool<span>via</span>
+            </a>
+
+            <a href="index.html">
+                العودة للرئيسية
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <main class="legal-page">
+
+        <div class="legal-card">
+
+            <span class="eyebrow">
+                نحن هنا لمساعدتك
+            </span>
+
+            <h1>تواصل معنا</h1>
+
+            <p>
+                عندك اقتراح لأداة جديدة أو ملاحظة تساعدنا على تطوير
+                Toolvia؟ اكتب رسالتك وسنراجعها.
+            </p>
+
+
+            <form
+                id="contactPageForm"
+                class="contact-form"
+            >
+
+                <input
+                    type="hidden"
+                    name="access_key"
+                    value="b61e1574-e0f2-40a3-b8f6-842a13d4fc89"
+                >
+
+                <input
+                    type="hidden"
+                    name="subject"
+                    value="رسالة جديدة من موقع Toolvia"
+                >
+
+                <input
+                    type="hidden"
+                    name="from_name"
+                    value="Toolvia Website"
+                >
+
+                <input
+                    type="checkbox"
+                    name="botcheck"
+                    style="display:none;"
+                    tabindex="-1"
+                >
+
+
+                <label for="name">الاسم</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="اكتب اسمك"
+                    required
+                >
+
+
+                <label for="email">البريد الإلكتروني</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="example@email.com"
+                    required
+                >
+
+
+                <label for="message_subject">موضوع الرسالة</label>
+
+                <input
+                    type="text"
+                    id="message_subject"
+                    name="message_subject"
+                    placeholder="مثال: اقتراح أداة جديدة"
+                    required
+                >
+
+
+                <label for="message">الرسالة</label>
+
+                <textarea
+                    id="message"
+                    name="message"
+                    placeholder="اكتب رسالتك أو اقتراحك هنا..."
+                    required
+                ></textarea>
+
+
+                <button
+                    type="submit"
+                    class="send-btn"
+                    id="submitButton"
+                >
+                    إرسال الرسالة
+                </button>
+
+            </form>
+
+
+            <div
+                id="contactMessage"
+                class="contact-message"
+                role="status"
+                aria-live="polite"
+            ></div>
+
+
+            <p class="legal-date">
+                نسعى للرد على الرسائل المهمة في أقرب وقت.
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <div class="container footer-inner">
+
+            <span>
+                © 2026 Toolvia — جميع الحقوق محفوظة.
+            </span>
+
+            <a href="index.html">
+                العودة للرئيسية
+            </a>
+
+        </div>
+
+    </footer>
+
+
+    <script>
+
+        const contactForm =
+            document.getElementById("contactPageForm");
+
+        const contactMessage =
+            document.getElementById("contactMessage");
+
+        const submitButton =
+            document.getElementById("submitButton");
+
+
+        contactForm.addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            submitButton.disabled = true;
+
+            submitButton.textContent =
+                "جاري إرسال الرسالة...";
+
+            contactMessage.textContent = "";
+            contactMessage.className = "contact-message";
+
+
+            try {
+
+                const response = await fetch(
+                    "https://api.web3forms.com/submit",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Accept": "application/json"
+                        },
+                        body: new FormData(contactForm)
+                    }
+                );
+
+
+                const result = await response.json();
+
+
+                if (response.ok && result.success) {
+
+                    contactMessage.textContent =
+                        "تم إرسال رسالتك بنجاح. شكرًا لتواصلك معنا!";
+
+                    contactMessage.classList.add("success");
+
+                    contactForm.reset();
+
+                } else {
+
+                    contactMessage.textContent =
+                        result.message ||
+                        "لم نتمكن من إرسال الرسالة. حاول مرة أخرى.";
+
+                    contactMessage.classList.add("error");
+
+                }
+
+            } catch (error) {
+
+                contactMessage.textContent =
+                    "حدث خطأ في الاتصال. تأكد من الإنترنت وحاول مجددًا.";
+
+                contactMessage.classList.add("error");
+
+            } finally {
+
+                submitButton.disabled = false;
+
+                submitButton.textContent =
+                    "إرسال الرسالة";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
