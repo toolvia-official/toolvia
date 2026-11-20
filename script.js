@@ -1,4 +1,3 @@
-
 const tools = [
   {
     id: "age",
@@ -126,9 +125,8 @@ function render() {
     </article>
   `).join("");
 
-    document.querySelectorAll(".tool-card").forEach(card => {
+  document.querySelectorAll(".tool-card").forEach(card => {
     card.addEventListener("click", () => {
-
       const toolId = card.dataset.id;
 
       if (toolId === "discount") {
@@ -139,6 +137,7 @@ function render() {
       openTool(toolId);
     });
   });
+}
 
 document.querySelectorAll(".filter").forEach(button => {
   button.addEventListener("click", () => {
@@ -426,7 +425,6 @@ function toolHTML(id, name) {
     </div>
   `;
 }
-
 function bindTool(id) {
   const output = document.querySelector("#result");
 
@@ -647,7 +645,6 @@ function bindTool(id) {
       `;
     });
   }
-
   if (id === "words") {
     document.querySelector("#go").addEventListener("click", () => {
       const text =
@@ -832,6 +829,11 @@ document.querySelector("#menuBtn").addEventListener("click", () => {
 document.querySelector("#randomTool").addEventListener("click", () => {
   const random =
     tools[Math.floor(Math.random() * tools.length)];
+
+  if (random.id === "discount") {
+    window.location.href = "discount.html";
+    return;
+  }
 
   openTool(random.id);
 });
