@@ -209,7 +209,7 @@
             <b>🔒</b>
             <span>
               <strong>خصوصية</strong>
-              البيانات لا تُرسل لخادم
+              بيانات الأدوات تُعالج داخل المتصفح
             </span>
           </div>
 
@@ -248,20 +248,28 @@
 
       <form id="contactForm">
 
+        <input type="hidden" name="access_key" value="b61e1574-e0f2-40a3-b8f6-842a13d4fc89">
+        <input type="hidden" name="subject" value="رسالة جديدة من نموذج الصفحة الرئيسية - Toolvia">
+        <input type="hidden" name="from_name" value="Toolvia">
+        <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+
         <input
           required
           type="text"
+          name="name"
           placeholder="الاسم"
           aria-label="الاسم">
 
         <input
           required
           type="email"
+          name="email"
           placeholder="البريد الإلكتروني"
           aria-label="البريد الإلكتروني">
 
         <textarea
           required
+          name="message"
           placeholder="اكتب رسالتك أو اقتراحك"
           aria-label="الرسالة"></textarea>
 
