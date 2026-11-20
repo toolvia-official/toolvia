@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>حاسبة الخصم | احسب السعر بعد الخصم بسهولة - Toolvia</title>
+
+    <meta name="description"
+          content="احسب قيمة الخصم والسعر النهائي بعد الخصم بسهولة ومجانًا باستخدام حاسبة الخصم من Toolvia.">
+
+    <meta name="robots" content="index, follow">
+
+    <link rel="canonical"
+          href="https://toolvia-official.github.io/toolvia/discount.html">
+
+    <meta property="og:title" content="حاسبة الخصم | Toolvia">
+    <meta property="og:description"
+          content="احسب قيمة الخصم والسعر النهائي بسهولة ومجانًا.">
+    <meta property="og:type" content="website">
+    <meta property="og:url"
+          content="https://toolvia-official.github.io/toolvia/discount.html">
+
+    <link rel="icon" href="toolvia-logo.png.png">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .discount-page {
+            max-width: 850px;
+            margin: 35px auto;
+            padding: 20px;
+            font-family: inherit;
+            line-height: 1.8;
+        }
+
+        .discount-breadcrumb {
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .discount-breadcrumb a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .discount-intro {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .discount-intro h1 {
+            margin-bottom: 12px;
+        }
+
+        .discount-calculator,
+        .discount-info {
+            background: var(--card-bg, #fff);
+            border: 1px solid var(--border-color, #e5e7eb);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .discount-calculator label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: bold;
+        }
+
+        .discount-calculator input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: transparent;
+            color: inherit;
+        }
+
+        .discount-calculator button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .discount-calculator button:hover {
+            background: #1d4ed8;
+        }
+
+        .discount-result {
+            display: none;
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #1e3a8a;
+        }
+
+        .discount-result p {
+            margin: 8px 0;
+        }
+
+        .discount-error {
+            display: none;
+            margin-top: 15px;
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .discount-info h2 {
+            margin-top: 0;
+        }
+
+        .discount-info li {
+            margin-bottom: 8px;
+        }
+
+        .discount-home {
+            display: inline-block;
+            margin-top: 10px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .discount-page {
+                padding: 12px;
+                margin: 20px auto;
+            }
+
+            .discount-calculator,
+            .discount-info {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="discount-page">
+
+        <nav class="discount-breadcrumb" aria-label="مسار الصفحة">
+            <a href="index.html">الرئيسية</a>
+            <span> / </span>
+            <span>حاسبة الخصم</span>
+        </nav>
+
+        <header class="discount-intro">
+            <h1>حاسبة الخصم</h1>
+            <p>
+                احسب قيمة الخصم والسعر النهائي لأي منتج بسهولة.
+                أدخل السعر الأصلي ونسبة الخصم، وستحصل على النتيجة فورًا.
+            </p>
+        </header>
+
+        <section class="discount-calculator">
+
+            <h2>احسب السعر بعد الخصم</h2>
+
+            <label for="originalPrice">السعر الأصلي</label>
+            <input
+                type="number"
+                id="originalPrice"
+                placeholder="مثال: 1000"
+                min="0"
+                step="any"
+            >
+
+            <label for="discountRate">نسبة الخصم (%)</label>
+            <input
+                type="number"
+                id="discountRate"
+                placeholder="مثال: 20"
+                min="0"
+                max="100"
+                step="any"
+            >
+
+            <button type="button" id="calculateDiscount">
+                احسب الخصم
+            </button>
+
+            <p class="discount-error" id="discountError" role="alert"></p>
+
+            <div class="discount-result" id="discountResult" aria-live="polite">
+                <p>
+                    قيمة الخصم:
+                    <strong id="savingAmount"></strong>
+                </p>
+
+                <p>
+                    السعر بعد الخصم:
+                    <strong id="finalPrice"></strong>
+                </p>
+            </div>
+
+        </section>
+
+        <section class="discount-info">
+
+            <h2>كيف تحسب الخصم؟</h2>
+
+            <p>
+                تساعدك حاسبة الخصم على معرفة المبلغ الذي ستوفره عند شراء
+                منتج عليه تخفيض، كما توضح لك السعر النهائي بعد تطبيق نسبة الخصم.
+            </p>
+
+            <h3>طريقة حساب الخصم</h3>
+
+            <p>
+                قيمة الخصم = السعر الأصلي × نسبة الخصم ÷ 100
+            </p>
+
+            <p>
+                السعر بعد الخصم = السعر الأصلي − قيمة الخصم
+            </p>
+
+            <h3>مثال عملي</h3>
+
+            <p>
+                إذا كان سعر منتج 1000 جنيه، ونسبة الخصم 20%:
+            </p>
+
+            <ul>
+                <li>قيمة الخصم: 200 جنيه.</li>
+                <li>السعر الأصلي: 1000 جنيه.</li>
+                <li>السعر بعد الخصم: 800 جنيه.</li>
+            </ul>
+
+            <h3>الأسئلة الشائعة</h3>
+
+            <h4>هل استخدام حاسبة الخصم مجاني؟</h4>
+            <p>
+                نعم، يمكنك استخدام الحاسبة مجانًا دون تسجيل حساب.
+            </p>
+
+            <h4>هل يمكن حساب أي نسبة خصم؟</h4>
+            <p>
+                نعم، يمكنك إدخال نسبة من 0% إلى 100%.
+            </p>
+
+            <h4>هل تعمل الحاسبة على الهاتف؟</h4>
+            <p>
+                نعم، تم تصميم الصفحة لتعمل على الهواتف وأجهزة الكمبيوتر.
+            </p>
+
+        </section>
+
+        <a class="discount-home" href="index.html">
+            ← العودة إلى الصفحة الرئيسية
+        </a>
+
+    </main>
+
+    <script>
+        const priceInput = document.getElementById("originalPrice");
+        const rateInput = document.getElementById("discountRate");
+        const calculateButton = document.getElementById("calculateDiscount");
+
+        const resultBox = document.getElementById("discountResult");
+        const errorBox = document.getElementById("discountError");
+
+        const savingAmount = document.getElementById("savingAmount");
+        const finalPrice = document.getElementById("finalPrice");
+
+        calculateButton.addEventListener("click", function () {
+
+            const price = Number(priceInput.value);
+            const rate = Number(rateInput.value);
+
+            errorBox.style.display = "none";
+            resultBox.style.display = "none";
+
+            if (
+                priceInput.value.trim() === "" ||
+                rateInput.value.trim() === ""
+            ) {
+                showError("من فضلك أدخل السعر ونسبة الخصم.");
+                return;
+            }
+
+            if (!Number.isFinite(price) || price < 0) {
+                showError("من فضلك أدخل سعرًا صحيحًا لا يقل عن صفر.");
+                return;
+            }
+
+            if (!Number.isFinite(rate) || rate < 0 || rate > 100) {
+                showError("نسبة الخصم يجب أن تكون بين 0 و100.");
+                return;
+            }
+
+            const saving = price * rate / 100;
+            const final = price - saving;
+
+            savingAmount.textContent =
+                saving.toFixed(2) + " جنيه";
+
+            finalPrice.textContent =
+                final.toFixed(2) + " جنيه";
+
+            resultBox.style.display = "block";
+        });
+
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
