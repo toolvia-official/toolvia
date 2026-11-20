@@ -1,4 +1,4 @@
-```css
+
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
 
 :root {
@@ -18,6 +18,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 90px;
 }
 
 body {
@@ -32,7 +33,6 @@ body {
   width: min(1120px, calc(100% - 40px));
   margin: auto;
 }
-
 
 /* =========================
    HEADER
@@ -98,7 +98,6 @@ nav a:hover {
   display: none;
 }
 
-
 /* =========================
    HERO
 ========================= */
@@ -142,7 +141,6 @@ nav a:hover {
     var(--primary),
     var(--primary2)
   );
-
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -209,7 +207,6 @@ nav a:hover {
     var(--primary),
     var(--primary2)
   );
-
   color: #fff;
 }
 
@@ -228,7 +225,6 @@ nav a:hover {
   border-color: var(--primary);
   color: var(--primary);
 }
-
 
 /* =========================
    TOOLS
@@ -338,7 +334,6 @@ nav a:hover {
   padding: 50px;
 }
 
-
 /* =========================
    ABOUT
 ========================= */
@@ -387,7 +382,6 @@ nav a:hover {
   font-size: 16px;
 }
 
-
 /* =========================
    CONTACT
 ========================= */
@@ -397,20 +391,26 @@ nav a:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 70px;
+  scroll-margin-top: 90px;
 }
 
 .contact p {
   color: var(--muted);
 }
 
-form {
+/* نموذج التواصل */
+
+#contactForm {
   display: grid;
-  gap: 12px;
+  gap: 14px;
+  width: 100%;
+  align-content: start;
 }
 
-input,
-textarea {
+#contactForm input:not([type="hidden"]):not([type="checkbox"]),
+#contactForm textarea {
   width: 100%;
+  display: block;
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px;
@@ -420,21 +420,52 @@ textarea {
   outline: none;
 }
 
-input:focus,
-textarea:focus {
+#contactForm input:focus,
+#contactForm textarea:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
 }
 
-textarea {
+#contactForm textarea {
   min-height: 120px;
   resize: vertical;
 }
 
-form .primary-btn {
+/* زر إرسال الرسالة */
+
+#contactForm button[type="submit"] {
+  display: inline-block;
+  visibility: visible;
+  opacity: 1;
+  width: auto;
+  min-width: 150px;
+  min-height: 48px;
   justify-self: start;
+  padding: 13px 28px;
+  border: none;
+  border-radius: 13px;
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--primary2)
+  );
+  color: #ffffff;
+  font-family: Cairo, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
 }
 
+#contactForm button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(37, 99, 235, .20);
+}
+
+#contactForm button[type="submit"]:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
 
 /* =========================
    TOOL MODAL
@@ -443,22 +474,16 @@ form .primary-btn {
 .modal {
   position: fixed;
   inset: 0;
-
   background: rgba(10, 18, 35, .72);
-
   backdrop-filter: blur(5px);
-
   display: none;
   place-items: center;
-
   padding: 20px;
-
   z-index: 50;
 }
 
 .modal.show {
   display: grid;
-
   animation: modalFade .2s ease;
 }
 
@@ -466,34 +491,23 @@ form .primary-btn {
   from {
     opacity: 0;
   }
-
   to {
     opacity: 1;
   }
 }
-
 
 /* النافذة المستخدمة فعليًا في script.js */
 
 .modal-box {
   width: min(620px, 100%);
   max-height: 90vh;
-
   overflow-y: auto;
-
   background: var(--surface);
-
   border: 1px solid var(--border);
-
   border-radius: 24px;
-
   padding: 32px;
-
   position: relative;
-
-  box-shadow:
-    0 30px 90px rgba(0, 0, 0, .30);
-
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .30);
   animation: modalUp .25s ease;
 }
 
@@ -502,39 +516,27 @@ form .primary-btn {
     opacity: 0;
     transform: translateY(20px) scale(.97);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
 
-
 /* زر الإغلاق */
 
 .modal-close {
   position: absolute;
-
   left: 18px;
   top: 18px;
-
   width: 40px;
   height: 40px;
-
   border: 1px solid var(--border);
-
   background: #f1f4f9;
-
   color: var(--text);
-
   border-radius: 12px;
-
   font-size: 26px;
-
   line-height: 1;
-
   cursor: pointer;
-
   transition: .2s;
 }
 
@@ -544,21 +546,15 @@ form .primary-btn {
   transform: rotate(5deg);
 }
 
-
 /* عنوان الأداة */
 
 .modal-box h2 {
   margin: 0 0 25px;
-
   padding-left: 50px;
-
   font-size: 27px;
-
   font-weight: 800;
-
   color: var(--text);
 }
-
 
 /* نموذج الأداة */
 
@@ -577,39 +573,27 @@ form .primary-btn {
 .tool-form input,
 .tool-form textarea {
   width: 100%;
-
   border: 1px solid var(--border);
-
   border-radius: 14px;
-
   padding: 14px 15px;
-
   font-family: inherit;
-
   font-size: 15px;
-
   background: var(--surface);
-
   color: var(--text);
-
   outline: none;
-
   transition: .2s;
 }
 
 .tool-form input:focus,
 .tool-form textarea:focus {
   border-color: var(--primary);
-
-  box-shadow:
-    0 0 0 3px rgba(37, 99, 235, .10);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
 }
 
 .tool-form textarea {
   min-height: 140px;
   resize: vertical;
 }
-
 
 /* نتيجة الحساب */
 
@@ -619,32 +603,19 @@ form .primary-btn {
     #eef4ff,
     #f5f0ff
   );
-
   border: 1px solid #dbe5ff;
-
   border-radius: 16px;
-
   padding: 18px;
-
   text-align: center;
-
   font-size: 20px;
-
   font-weight: 800;
-
   color: var(--primary);
-
   margin-top: 8px;
-
   min-height: 58px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 }
-
 
 /* أزرار متعددة */
 
@@ -658,42 +629,27 @@ form .primary-btn {
   white-space: nowrap;
 }
 
-
 /* =========================
    TOAST
 ========================= */
 
 .toast {
   position: fixed;
-
   bottom: 22px;
   left: 50%;
-
-  transform:
-    translateX(-50%)
-    translateY(100px);
-
+  transform: translateX(-50%) translateY(100px);
   background: #111827;
-
   color: #fff;
-
   padding: 12px 18px;
-
   border-radius: 12px;
-
   transition: .25s;
-
   z-index: 70;
-
   box-shadow: 0 10px 30px rgba(0, 0, 0, .20);
 }
 
 .toast.show {
-  transform:
-    translateX(-50%)
-    translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
-
 
 /* =========================
    FOOTER
@@ -728,7 +684,6 @@ footer {
   color: var(--primary);
 }
 
-
 /* =========================
    LEGAL PAGES
 ========================= */
@@ -740,15 +695,10 @@ footer {
 .legal-card {
   max-width: 850px;
   margin: auto;
-
   padding: 45px;
-
   background-color: var(--surface);
-
   border: 1px solid var(--border);
-
   border-radius: 22px;
-
   box-shadow: var(--shadow);
 }
 
@@ -782,7 +732,6 @@ footer {
   border-radius: 50px;
 }
 
-
 /* =========================
    DARK MODE
 ========================= */
@@ -801,12 +750,11 @@ body.dark .header {
 }
 
 body.dark .hero {
-  background:
-    radial-gradient(
-      circle at 50% 0,
-      #172a54 0,
-      transparent 50%
-    );
+  background: radial-gradient(
+    circle at 50% 0,
+    #172a54 0,
+    transparent 50%
+  );
 }
 
 body.dark .badge,
@@ -838,7 +786,6 @@ body.dark .search-wrap input {
   color: var(--text);
 }
 
-
 /* =========================
    RESPONSIVE
 ========================= */
@@ -862,19 +809,13 @@ body.dark .search-wrap input {
 
   nav {
     display: none;
-
     position: absolute;
-
     top: 76px;
     right: 0;
     left: 0;
-
     background: var(--surface);
-
     padding: 20px;
-
     flex-direction: column;
-
     border-bottom: 1px solid var(--border);
   }
 
@@ -900,7 +841,6 @@ body.dark .search-wrap input {
   }
 }
 
-
 @media (max-width: 560px) {
 
   .container {
@@ -922,6 +862,10 @@ body.dark .search-wrap input {
   .primary-btn,
   .secondary-btn {
     text-align: center;
+  }
+
+  #contactForm button[type="submit"] {
+    width: 100%;
   }
 
   .footer-inner {
@@ -964,4 +908,3 @@ body.dark .search-wrap input {
     font-size: 18px;
   }
 }
-```
