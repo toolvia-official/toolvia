@@ -1,3 +1,13 @@
+
+/* =========================================
+   TOOLVIA - MAIN JAVASCRIPT
+   Complete stable version
+========================================= */
+
+"use strict";
+
+/* 1. TOOLS DATABASE */
+
 const tools = [
   {
     id: "age",
@@ -85,6 +95,9 @@ const tools = [
   }
 ];
 
+
+/* 2. GLOBAL VARIABLES */
+
 const grid = document.querySelector("#toolsGrid");
 const search = document.querySelector("#searchInput");
 const count = document.querySelector("#resultCount");
@@ -92,10 +105,17 @@ const count = document.querySelector("#resultCount");
 let active = "all";
 let interval = null;
 
+
+/* 3. DISPLAY TOOLS */
+
 function render() {
+
+  if (!grid || !search || !count) return;
+
   const q = search.value.trim().toLowerCase();
 
   const list = tools.filter(tool => {
+
     const matchesCategory =
       active === "all" || tool.cat === active;
 
@@ -103,89 +123,142 @@ function render() {
       `${tool.name} ${tool.desc}`.toLowerCase();
 
     return matchesCategory && text.includes(q);
+
   });
 
   count.textContent = `${list.length} أداة متاحة`;
 
   if (list.length === 0) {
+
     grid.innerHTML = `
       <div class="empty">
         لا توجد أداة مطابقة للبحث.
       </div>
     `;
+
     return;
   }
 
   grid.innerHTML = list.map(tool => `
+
     <article class="tool-card" data-id="${tool.id}">
+
       <div class="tool-icon">${tool.icon}</div>
+
       <h3>${tool.name}</h3>
+
       <p>${tool.desc}</p>
-      <span class="tool-tag">فتح الأداة ←</span>
+
+      <span class="tool-tag">
+        فتح الأداة ←
+      </span>
+
     </article>
+
   `).join("");
 
-  document.querySelectorAll(".tool-card").forEach(card => {
-    card.addEventListener("click", () => {
-      const toolId = card.dataset.id;
-
-      if (toolId === "discount") {
-        window.location.href = "discount.html";
-        return;
-      }
-
-      openTool(toolId);
-    });
-  });
 }
 
-document.querySelectorAll(".filter").forEach(button => {
-  button.addEventListener("click", () => {
-    const current = document.querySelector(".filter.active");
 
-    if (current) {
-      current.classList.remove("active");
+/* 4. TOOL CARD CLICK */
+
+if (grid) {
+
+  grid.addEventListener("click", event => {
+
+    const card = event.target.closest(".tool-card");
+
+    if (!card) return;
+
+    const id = card.dataset.id;
+
+    if (id === "discount") {
+      window.location.href = "discount.html";
+      return;
     }
 
+    openTool(id);
+
+  });
+
+}
+
+
+/* 5. SEARCH */
+
+if (search) {
+  search.addEventListener("input", render);
+}
+
+
+/* 6. FILTERS */
+
+document.querySelectorAll(".filter").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    document.querySelectorAll(".filter").forEach(item => {
+      item.classList.remove("active");
+    });
+
     button.classList.add("active");
+
     active = button.dataset.filter;
 
     render();
+
   });
+
 });
 
-search.addEventListener("input", render);
+
+/* 7. CREATE TOOL WINDOW */
 
 function createModal() {
-  if (document.querySelector("#toolModal")) {
-    return;
-  }
+
+  if (document.querySelector("#toolModal")) return;
 
   document.body.insertAdjacentHTML("beforeend", `
+
     <div class="modal" id="toolModal">
+
       <div class="modal-box">
-        <button class="modal-close" id="closeModal" aria-label="إغلاق">
+
+        <button
+          class="modal-close"
+          id="closeModal"
+          aria-label="إغلاق">
           ×
         </button>
 
         <div id="toolContent"></div>
+
       </div>
+
     </div>
+
   `);
 
   const modal = document.querySelector("#toolModal");
-  const close = document.querySelector("#closeModal");
 
-  close.addEventListener("click", closeModal);
+  document.querySelector("#closeModal")
+    .addEventListener("click", closeModal);
 
   modal.addEventListener("click", event => {
+
     if (event.target === modal) {
       closeModal();
     }
+
   });
+
 }
 
+
+/* 8. CLOSE TOOL */
+
 function closeModal() {
+
   const modal = document.querySelector("#toolModal");
 
   if (modal) {
@@ -196,27 +269,34 @@ function closeModal() {
     clearInterval(interval);
     interval = null;
   }
+
 }
 
+
+/* 9. OPEN TOOL */
+
 function openTool(id) {
-  createModal();
 
   const tool = tools.find(item => item.id === id);
 
-  if (!tool) {
-    return;
-  }
+  if (!tool) return;
 
-  const content = document.querySelector("#toolContent");
+  createModal();
 
-  content.innerHTML = toolHTML(id, tool.name);
+  document.querySelector("#toolContent").innerHTML =
+    toolHTML(id, tool.name);
 
   document.querySelector("#toolModal").classList.add("show");
 
   bindTool(id);
+
 }
 
+
+/* 10. TOOL FORMS */
+
 function toolHTML(id, name) {
+
   const forms = {
 
     age: `
@@ -341,10 +421,7 @@ function toolHTML(id, name) {
     words: `
       <label>اكتب أو الصق النص</label>
 
-      <textarea
-        id="txt"
-        placeholder="اكتب هنا..."
-      ></textarea>
+      <textarea id="txt" placeholder="اكتب هنا..."></textarea>
 
       <button class="primary-btn" id="go">
         احسب
@@ -358,12 +435,10 @@ function toolHTML(id, name) {
     textcase: `
       <label>اكتب النص</label>
 
-      <textarea
-        id="txt"
-        placeholder="اكتب النص هنا..."
-      ></textarea>
+      <textarea id="txt" placeholder="اكتب النص هنا..."></textarea>
 
       <div class="copy-row">
+
         <button class="primary-btn" id="upper">
           UPPERCASE
         </button>
@@ -371,6 +446,7 @@ function toolHTML(id, name) {
         <button class="secondary-btn" id="clean">
           إزالة المسافات الزائدة
         </button>
+
       </div>
 
       <div class="result" id="result">
@@ -399,9 +475,10 @@ function toolHTML(id, name) {
       <input id="min" type="number" value="1" min="0">
 
       <label>الثواني</label>
-      <input id="sec" type="number" value="0" min="0">
+      <input id="sec" type="number" value="0" min="0" max="59">
 
       <div class="copy-row">
+
         <button class="primary-btn" id="go">
           ابدأ
         </button>
@@ -409,35 +486,58 @@ function toolHTML(id, name) {
         <button class="secondary-btn" id="stop">
           إيقاف
         </button>
+
       </div>
 
       <div class="result" id="result">
         01:00
       </div>
     `
+
   };
 
   return `
     <h2>${name}</h2>
 
     <div class="tool-form">
-      ${forms[id]}
+      ${forms[id] || ""}
     </div>
   `;
+
 }
+
+
+/* 11. TOOL FUNCTIONS */
+
 function bindTool(id) {
+
   const output = document.querySelector("#result");
 
+  const get = selector =>
+    document.querySelector(selector);
+
+  const number = selector =>
+    Number(get(selector).value);
+
+  const button = get("#go");
+
+  if (!output) return;
+
+
+  /* AGE */
+
   if (id === "age") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const value = document.querySelector("#birth").value;
+
+    button.addEventListener("click", () => {
+
+      const value = get("#birth").value;
 
       if (!value) {
         output.textContent = "من فضلك اختر تاريخ الميلاد.";
         return;
       }
 
-      const birth = new Date(value);
+      const birth = new Date(value + "T00:00:00");
       const now = new Date();
 
       if (birth > now) {
@@ -452,14 +552,11 @@ function bindTool(id) {
       if (days < 0) {
         months--;
 
-        const previousMonthDays =
-          new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            0
-          ).getDate();
-
-        days += previousMonthDays;
+        days += new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          0
+        ).getDate();
       }
 
       if (months < 0) {
@@ -469,16 +566,20 @@ function bindTool(id) {
 
       output.textContent =
         `${years} سنة و ${months} شهر و ${days} يوم`;
+
     });
+
   }
 
-  if (id === "bmi") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const h =
-        Number(document.querySelector("#h").value) / 100;
 
-      const w =
-        Number(document.querySelector("#w").value);
+  /* BMI */
+
+  if (id === "bmi") {
+
+    button.addEventListener("click", () => {
+
+      const h = number("#h") / 100;
+      const w = number("#w");
 
       if (h <= 0 || w <= 0) {
         output.textContent = "من فضلك أدخل الطول والوزن.";
@@ -489,182 +590,207 @@ function bindTool(id) {
 
       let status;
 
-      if (bmi < 18.5) {
-        status = "نحافة";
-      } else if (bmi < 25) {
-        status = "طبيعي";
-      } else if (bmi < 30) {
-        status = "زيادة وزن";
-      } else {
-        status = "سمنة";
-      }
+      if (bmi < 18.5) status = "نحافة";
+      else if (bmi < 25) status = "وزن طبيعي";
+      else if (bmi < 30) status = "زيادة وزن";
+      else status = "سمنة";
 
       output.textContent =
         `BMI = ${bmi.toFixed(1)} — ${status}`;
+
     });
+
   }
 
+
+  /* DISCOUNT */
+
   if (id === "discount") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const price =
-        Number(document.querySelector("#price").value);
 
-      const rate =
-        Number(document.querySelector("#rate").value);
+    button.addEventListener("click", () => {
 
-      if (price < 0 || rate < 0 || rate > 100) {
-        output.textContent =
-          "من فضلك أدخل سعرًا ونسبة خصم صحيحة.";
+      const price = number("#price");
+      const rate = number("#rate");
+
+      if (
+        get("#price").value === "" ||
+        get("#rate").value === "" ||
+        price < 0 ||
+        rate < 0 ||
+        rate > 100
+      ) {
+        output.textContent = "أدخل السعر ونسبة الخصم بشكل صحيح.";
         return;
       }
 
       const saving = price * rate / 100;
       const finalPrice = price - saving;
 
-      output.innerHTML = `
-        السعر بعد الخصم: ${finalPrice.toFixed(2)}
-        <br>
-        قيمة التوفير: ${saving.toFixed(2)}
-      `;
+      output.textContent =
+        `السعر بعد الخصم: ${finalPrice.toFixed(2)} | التوفير: ${saving.toFixed(2)}`;
+
     });
+
   }
 
+
+  /* PERCENT */
+
   if (id === "percent") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const a =
-        Number(document.querySelector("#a").value);
 
-      const b =
-        Number(document.querySelector("#b").value);
+    button.addEventListener("click", () => {
 
-      if (b === 0) {
-        output.textContent =
-          "لا يمكن القسمة على صفر.";
+      const a = number("#a");
+      const b = number("#b");
+
+      if (get("#a").value === "" || get("#b").value === "" || b === 0) {
+        output.textContent = "أدخل رقمين صحيحين، والرقم الكلي لا يساوي صفرًا.";
         return;
       }
 
       output.textContent =
         `${((a / b) * 100).toFixed(2)}%`;
+
     });
+
   }
 
+
+  /* LOAN */
+
   if (id === "loan") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const principal =
-        Number(document.querySelector("#p").value);
 
-      const annualRate =
-        Number(document.querySelector("#r").value);
+    button.addEventListener("click", () => {
 
-      const months =
-        Number(document.querySelector("#m").value);
+      const p = number("#p");
+      const r = number("#r");
+      const m = number("#m");
 
       if (
-        principal <= 0 ||
-        annualRate < 0 ||
-        months <= 0
+        p <= 0 ||
+        r < 0 ||
+        m <= 0 ||
+        get("#p").value === "" ||
+        get("#r").value === "" ||
+        get("#m").value === ""
       ) {
-        output.textContent =
-          "من فضلك أدخل بيانات القرض بشكل صحيح.";
+        output.textContent = "أدخل بيانات القرض بشكل صحيح.";
         return;
       }
 
-      const monthlyRate =
-        annualRate / 100 / 12;
+      const monthlyRate = r / 100 / 12;
 
       let payment;
 
       if (monthlyRate === 0) {
-        payment = principal / months;
+        payment = p / m;
       } else {
         payment =
-          principal *
-          monthlyRate *
-          Math.pow(1 + monthlyRate, months) /
-          (Math.pow(1 + monthlyRate, months) - 1);
+          p * monthlyRate *
+          Math.pow(1 + monthlyRate, m) /
+          (Math.pow(1 + monthlyRate, m) - 1);
       }
 
       output.textContent =
         `القسط الشهري التقريبي: ${payment.toFixed(2)}`;
+
     });
+
   }
+
+
+  /* LENGTH */
 
   if (id === "length") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const value =
-        Number(document.querySelector("#v").value);
 
-      if (value < 0) {
+    button.addEventListener("click", () => {
+
+      const v = number("#v");
+
+      if (get("#v").value === "" || v < 0) {
         output.textContent = "أدخل قيمة صحيحة.";
         return;
       }
 
       output.innerHTML = `
-        ${value * 100} سم
+        ${v * 100} سم
         <br>
-        ${(value * 3.28084).toFixed(3)} قدم
+        ${(v * 3.28084).toFixed(3)} قدم
         <br>
-        ${(value * 39.3701).toFixed(2)} بوصة
+        ${(v * 39.3701).toFixed(2)} بوصة
       `;
+
     });
+
   }
+
+
+  /* WEIGHT */
 
   if (id === "weight") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const value =
-        Number(document.querySelector("#v").value);
 
-      if (value < 0) {
+    button.addEventListener("click", () => {
+
+      const v = number("#v");
+
+      if (get("#v").value === "" || v < 0) {
         output.textContent = "أدخل قيمة صحيحة.";
         return;
       }
 
       output.innerHTML = `
-        ${value * 1000} جرام
+        ${v * 1000} جرام
         <br>
-        ${(value * 2.20462).toFixed(3)} رطل
+        ${(v * 2.20462).toFixed(3)} رطل
       `;
+
     });
+
   }
+
+
+  /* TEMPERATURE */
 
   if (id === "temp") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const value =
-        Number(document.querySelector("#v").value);
 
-      const fahrenheit =
-        (value * 9 / 5) + 32;
+    button.addEventListener("click", () => {
 
-      const kelvin =
-        value + 273.15;
+      const v = number("#v");
+
+      if (get("#v").value === "") {
+        output.textContent = "أدخل درجة الحرارة.";
+        return;
+      }
 
       output.innerHTML = `
-        ${fahrenheit.toFixed(2)} °F
+        ${(v * 9 / 5 + 32).toFixed(2)} °F
         <br>
-        ${kelvin.toFixed(2)} K
+        ${(v + 273.15).toFixed(2)} K
       `;
+
     });
+
   }
+
+
+  /* WORD COUNTER */
+
   if (id === "words") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const text =
-        document.querySelector("#txt").value;
 
-      const trimmed =
-        text.trim();
+    button.addEventListener("click", () => {
 
-      const words =
-        trimmed
-          ? trimmed.split(/\s+/).length
-          : 0;
+      const text = get("#txt").value;
+      const trimmed = text.trim();
 
-      const characters =
-        text.length;
+      const words = trimmed
+        ? trimmed.split(/\s+/).length
+        : 0;
 
-      const lines =
-        trimmed
-          ? trimmed.split(/\n/).length
-          : 0;
+      const characters = text.length;
+
+      const lines = trimmed
+        ? trimmed.split(/\n/).length
+        : 0;
 
       output.innerHTML = `
         ${words} كلمة
@@ -673,79 +799,80 @@ function bindTool(id) {
         <br>
         ${lines} سطر
       `;
+
     });
+
   }
+
+
+  /* TEXT FORMAT */
 
   if (id === "textcase") {
-    document.querySelector("#upper").addEventListener("click", () => {
-      const text =
-        document.querySelector("#txt").value;
+
+    get("#upper").addEventListener("click", () => {
 
       output.textContent =
-        text.toUpperCase();
+        get("#txt").value.toUpperCase();
+
     });
 
-    document.querySelector("#clean").addEventListener("click", () => {
-      const text =
-        document.querySelector("#txt").value;
+    get("#clean").addEventListener("click", () => {
 
       output.textContent =
-        text.replace(/\s+/g, " ").trim();
+        get("#txt").value.replace(/\s+/g, " ").trim();
+
     });
+
   }
 
-  if (id === "date") {
-    document.querySelector("#go").addEventListener("click", () => {
-      const first =
-        document.querySelector("#d1").value;
 
-      const second =
-        document.querySelector("#d2").value;
+  /* DATE DIFFERENCE */
+
+  if (id === "date") {
+
+    button.addEventListener("click", () => {
+
+      const first = get("#d1").value;
+      const second = get("#d2").value;
 
       if (!first || !second) {
-        output.textContent =
-          "من فضلك اختر التاريخين.";
+        output.textContent = "من فضلك اختر التاريخين.";
         return;
       }
 
-      const date1 = new Date(first);
-      const date2 = new Date(second);
+      const date1 = new Date(first + "T00:00:00");
+      const date2 = new Date(second + "T00:00:00");
 
-      const difference =
-        Math.abs(date2 - date1);
+      const difference = Math.abs(date2 - date1);
 
-      const days =
-        Math.round(
-          difference / (1000 * 60 * 60 * 24)
-        );
+      const days = Math.round(
+        difference / (1000 * 60 * 60 * 24)
+      );
 
-      output.textContent =
-        `${days} يوم`;
+      output.textContent = `${days} يوم`;
+
     });
+
   }
 
+
+  /* TIMER */
+
   if (id === "timer") {
-    const minInput =
-      document.querySelector("#min");
 
-    const secInput =
-      document.querySelector("#sec");
+    const minInput = get("#min");
+    const secInput = get("#sec");
 
-    const startButton =
-      document.querySelector("#go");
+    const stopButton = get("#stop");
 
-    const stopButton =
-      document.querySelector("#stop");
+    function updateDisplay(total) {
 
-    function updateDisplay(totalSeconds) {
-      const minutes =
-        Math.floor(totalSeconds / 60);
-
-      const seconds =
-        totalSeconds % 60;
+      const minutes = Math.floor(total / 60);
+      const seconds = total % 60;
 
       output.textContent =
         `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
     }
 
     updateDisplay(
@@ -753,122 +880,206 @@ function bindTool(id) {
       Number(secInput.value)
     );
 
-    startButton.addEventListener("click", () => {
-      if (interval) {
-        clearInterval(interval);
-      }
+    button.addEventListener("click", () => {
 
-      let totalSeconds =
-        Number(minInput.value) * 60 +
-        Number(secInput.value);
-
-      if (totalSeconds <= 0) {
-        output.textContent =
-          "أدخل وقتًا أكبر من صفر.";
-        return;
-      }
-
-      updateDisplay(totalSeconds);
-
-      interval = setInterval(() => {
-        totalSeconds--;
-
-        updateDisplay(totalSeconds);
-
-        if (totalSeconds <= 0) {
-          clearInterval(interval);
-          interval = null;
-          toast("انتهى الوقت ⏰");
-        }
-      }, 1000);
-    });
-
-    stopButton.addEventListener("click", () => {
       if (interval) {
         clearInterval(interval);
         interval = null;
       }
+
+      let total =
+        Number(minInput.value) * 60 +
+        Number(secInput.value);
+
+      if (
+        total <= 0 ||
+        Number(secInput.value) > 59 ||
+        Number(minInput.value) < 0
+      ) {
+        output.textContent = "أدخل وقتًا صحيحًا أكبر من صفر.";
+        return;
+      }
+
+      updateDisplay(total);
+
+      interval = setInterval(() => {
+
+        total--;
+
+        updateDisplay(total);
+
+        if (total <= 0) {
+
+          clearInterval(interval);
+          interval = null;
+
+          toast("انتهى الوقت ⏰");
+
+        }
+
+      }, 1000);
+
     });
+
+    stopButton.addEventListener("click", () => {
+
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+
+    });
+
   }
+
 }
 
+
+/* 12. NOTIFICATION */
+
 function toast(message) {
+
   let element = document.querySelector("#toast");
 
   if (!element) {
+
     element = document.createElement("div");
+
     element.id = "toast";
     element.className = "toast";
+
     document.body.appendChild(element);
+
   }
 
   element.textContent = message;
+
   element.classList.add("show");
 
   setTimeout(() => {
     element.classList.remove("show");
   }, 2600);
+
 }
 
-document.querySelector("#themeBtn").addEventListener("click", () => {
-  document.body.classList.toggle("dark");
 
-  const button =
-    document.querySelector("#themeBtn");
+/* 13. DARK MODE */
 
-  button.textContent =
-    document.body.classList.contains("dark")
-      ? "☀️"
-      : "🌙";
-});
+const themeButton = document.querySelector("#themeBtn");
 
-document.querySelector("#menuBtn").addEventListener("click", () => {
-  document.querySelector("#navLinks").classList.toggle("show");
-});
+if (themeButton) {
 
-document.querySelector("#randomTool").addEventListener("click", () => {
-  const random =
-    tools[Math.floor(Math.random() * tools.length)];
+  themeButton.addEventListener("click", () => {
 
-  if (random.id === "discount") {
-    window.location.href = "discount.html";
-    return;
-  }
+    document.body.classList.toggle("dark");
 
-  openTool(random.id);
-});
+    themeButton.textContent =
+      document.body.classList.contains("dark")
+        ? "☀️"
+        : "🌙";
 
-/* Homepage contact form - Web3Forms */
-document.querySelector("#contactForm").addEventListener("submit", async event => {
-  event.preventDefault();
+  });
 
-  const form = event.target;
-  const submitButton = form.querySelector('button[type="submit"]');
-  const originalButtonText = submitButton.textContent;
+}
 
-  submitButton.disabled = true;
-  submitButton.textContent = "جارٍ الإرسال...";
 
-  try {
-    const response = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      body: new FormData(form)
-    });
+/* 14. MOBILE MENU */
 
-    const result = await response.json();
+const menuButton = document.querySelector("#menuBtn");
+const navLinks = document.querySelector("#navLinks");
 
-    if (response.ok && result.success) {
-      toast("تم إرسال رسالتك بنجاح. شكرًا لتواصلك معنا!");
-      form.reset();
-    } else {
-      toast("تعذر إرسال الرسالة. حاول مرة أخرى.");
+if (menuButton && navLinks) {
+
+  menuButton.addEventListener("click", () => {
+    navLinks.classList.toggle("show");
+  });
+
+}
+
+
+/* 15. RANDOM TOOL */
+
+const randomButton = document.querySelector("#randomTool");
+
+if (randomButton) {
+
+  randomButton.addEventListener("click", () => {
+
+    const random =
+      tools[Math.floor(Math.random() * tools.length)];
+
+    if (random.id === "discount") {
+      window.location.href = "discount.html";
+      return;
     }
-  } catch (error) {
-    toast("حدث خطأ في الاتصال. تحقق من الإنترنت وحاول مرة أخرى.");
-  } finally {
-    submitButton.disabled = false;
-    submitButton.textContent = originalButtonText;
-  }
-});
+
+    openTool(random.id);
+
+  });
+
+}
+
+
+/* 16. CONTACT FORM - WEB3FORMS */
+
+const contactForm = document.querySelector("#contactForm");
+
+if (contactForm) {
+
+  contactForm.addEventListener("submit", async event => {
+
+    event.preventDefault();
+
+    const form = event.target;
+
+    const submitButton =
+      form.querySelector('button[type="submit"]');
+
+    const originalText = submitButton.textContent;
+
+    submitButton.disabled = true;
+    submitButton.textContent = "جارٍ الإرسال...";
+
+    try {
+
+      const response = await fetch(
+        "https://api.web3forms.com/submit",
+        {
+          method: "POST",
+          body: new FormData(form)
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+
+        toast("تم إرسال رسالتك بنجاح. شكرًا لتواصلك معنا!");
+
+        form.reset();
+
+      } else {
+
+        toast("تعذر إرسال الرسالة. حاول مرة أخرى.");
+
+      }
+
+    } catch (error) {
+
+      toast("حدث خطأ في الاتصال. تحقق من الإنترنت وحاول مرة أخرى.");
+
+    } finally {
+
+      submitButton.disabled = false;
+      submitButton.textContent = originalText;
+
+    }
+
+  });
+
+}
+
+
+/* 17. START WEBSITE */
 
 render();
