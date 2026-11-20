@@ -17,13 +17,15 @@
 
     <style>
         .contact-form {
-            display: grid !important;
+            display: flex !important;
+            flex-direction: column !important;
             gap: 12px !important;
-            width: 100%;
+            width: 100% !important;
+            margin-top: 25px;
         }
 
         .contact-form label {
-            display: block;
+            display: block !important;
             font-weight: 700;
             color: var(--text);
             margin-top: 8px;
@@ -31,9 +33,10 @@
 
         .contact-form input:not([type="checkbox"]),
         .contact-form textarea {
-            display: block;
-            width: 100%;
-            padding: 14px;
+            display: block !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 14px !important;
             border: 1px solid var(--border);
             border-radius: 12px;
             background: var(--surface);
@@ -42,36 +45,47 @@
         }
 
         .contact-form textarea {
-            min-height: 150px;
+            min-height: 150px !important;
             resize: vertical;
         }
 
-        .contact-form .send-btn {
-            display: block !important;
+        .contact-form input[type="checkbox"] {
+            display: none !important;
+        }
+
+        .contact-form button.send-btn {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
             visibility: visible !important;
             opacity: 1 !important;
             width: 100% !important;
-            min-height: 52px;
-            margin-top: 15px;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 13px;
-            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            min-height: 56px !important;
+            margin: 20px 0 10px !important;
+            padding: 15px 20px !important;
+            border: none !important;
+            border-radius: 13px !important;
+            background: #2563eb !important;
             color: #ffffff !important;
-            font-family: inherit;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            position: relative;
-            z-index: 10;
+            font-family: inherit !important;
+            font-size: 17px !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            position: relative !important;
+            z-index: 10 !important;
         }
 
-        .contact-form .send-btn:disabled {
+        .contact-form button.send-btn:hover {
+            background: #1d4ed8 !important;
+        }
+
+        .contact-form button.send-btn:disabled {
             opacity: .65 !important;
-            cursor: wait;
+            cursor: wait !important;
         }
 
         .contact-message {
+            display: block;
             margin-top: 18px;
             padding: 12px;
             border-radius: 10px;
@@ -93,13 +107,11 @@
             background: #fee2e2;
         }
     </style>
-
 </head>
 
 <body>
 
     <header class="header">
-
         <div class="nav container">
 
             <a class="logo" href="index.html">
@@ -111,9 +123,7 @@
             </a>
 
         </div>
-
     </header>
-
 
     <main class="legal-page">
 
@@ -130,11 +140,7 @@
                 Toolvia؟ اكتب رسالتك وسنراجعها.
             </p>
 
-
-            <form
-                id="contactPageForm"
-                class="contact-form"
-            >
+            <form id="contactPageForm" class="contact-form">
 
                 <input
                     type="hidden"
@@ -161,7 +167,6 @@
                     tabindex="-1"
                 >
 
-
                 <label for="name">الاسم</label>
 
                 <input
@@ -171,7 +176,6 @@
                     placeholder="اكتب اسمك"
                     required
                 >
-
 
                 <label for="email">البريد الإلكتروني</label>
 
@@ -183,7 +187,6 @@
                     required
                 >
 
-
                 <label for="message_subject">موضوع الرسالة</label>
 
                 <input
@@ -194,7 +197,6 @@
                     required
                 >
 
-
                 <label for="message">الرسالة</label>
 
                 <textarea
@@ -203,7 +205,6 @@
                     placeholder="اكتب رسالتك أو اقتراحك هنا..."
                     required
                 ></textarea>
-
 
                 <button
                     type="submit"
@@ -215,14 +216,12 @@
 
             </form>
 
-
             <div
                 id="contactMessage"
                 class="contact-message"
                 role="status"
                 aria-live="polite"
             ></div>
-
 
             <p class="legal-date">
                 نسعى للرد على الرسائل المهمة في أقرب وقت.
@@ -232,9 +231,7 @@
 
     </main>
 
-
     <footer>
-
         <div class="container footer-inner">
 
             <span>
@@ -246,91 +243,77 @@
             </a>
 
         </div>
-
     </footer>
 
-
     <script>
+        const contactForm = document.getElementById("contactPageForm");
+        const contactMessage = document.getElementById("contactMessage");
+        const submitButton = document.getElementById("submitButton");
 
-        const contactForm =
-            document.getElementById("contactPageForm");
+        if (contactForm && submitButton && contactMessage) {
 
-        const contactMessage =
-            document.getElementById("contactMessage");
+            contactForm.addEventListener("submit", async function(event) {
 
-        const submitButton =
-            document.getElementById("submitButton");
+                event.preventDefault();
 
+                submitButton.disabled = true;
+                submitButton.textContent = "جاري إرسال الرسالة...";
 
-        contactForm.addEventListener("submit", async function(event) {
+                contactMessage.textContent = "";
+                contactMessage.className = "contact-message";
 
-            event.preventDefault();
+                try {
 
-            submitButton.disabled = true;
+                    const response = await fetch(
+                        "https://api.web3forms.com/submit",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Accept": "application/json"
+                            },
+                            body: new FormData(contactForm)
+                        }
+                    );
 
-            submitButton.textContent =
-                "جاري إرسال الرسالة...";
+                    const result = await response.json();
 
-            contactMessage.textContent = "";
-            contactMessage.className = "contact-message";
+                    if (response.ok && result.success) {
 
+                        contactMessage.textContent =
+                            "تم إرسال رسالتك بنجاح. شكرًا لتواصلك معنا!";
 
-            try {
+                        contactMessage.classList.add("success");
 
-                const response = await fetch(
-                    "https://api.web3forms.com/submit",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Accept": "application/json"
-                        },
-                        body: new FormData(contactForm)
+                        contactForm.reset();
+
+                    } else {
+
+                        contactMessage.textContent =
+                            result.message ||
+                            "لم نتمكن من إرسال الرسالة. حاول مرة أخرى.";
+
+                        contactMessage.classList.add("error");
+
                     }
-                );
 
-
-                const result = await response.json();
-
-
-                if (response.ok && result.success) {
+                } catch (error) {
 
                     contactMessage.textContent =
-                        "تم إرسال رسالتك بنجاح. شكرًا لتواصلك معنا!";
-
-                    contactMessage.classList.add("success");
-
-                    contactForm.reset();
-
-                } else {
-
-                    contactMessage.textContent =
-                        result.message ||
-                        "لم نتمكن من إرسال الرسالة. حاول مرة أخرى.";
+                        "حدث خطأ في الاتصال. تأكد من الإنترنت وحاول مجددًا.";
 
                     contactMessage.classList.add("error");
 
+                } finally {
+
+                    submitButton.disabled = false;
+                    submitButton.textContent = "إرسال الرسالة";
+
                 }
 
-            } catch (error) {
+            });
 
-                contactMessage.textContent =
-                    "حدث خطأ في الاتصال. تأكد من الإنترنت وحاول مجددًا.";
-
-                contactMessage.classList.add("error");
-
-            } finally {
-
-                submitButton.disabled = false;
-
-                submitButton.textContent =
-                    "إرسال الرسالة";
-
-            }
-
-        });
-
+        }
     </script>
 
 </body>
-
 </html>
