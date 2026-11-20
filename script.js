@@ -126,12 +126,19 @@ function render() {
     </article>
   `).join("");
 
-  document.querySelectorAll(".tool-card").forEach(card => {
+    document.querySelectorAll(".tool-card").forEach(card => {
     card.addEventListener("click", () => {
-      openTool(card.dataset.id);
+
+      const toolId = card.dataset.id;
+
+      if (toolId === "discount") {
+        window.location.href = "discount.html";
+        return;
+      }
+
+      openTool(toolId);
     });
   });
-}
 
 document.querySelectorAll(".filter").forEach(button => {
   button.addEventListener("click", () => {
